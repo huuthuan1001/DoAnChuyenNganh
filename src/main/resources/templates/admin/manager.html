@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="icon" href="path/to/your/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+            padding: 15px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .navbar-brand svg {
+            margin-right: 10px;
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: #fff !important;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #f8f9fa !important;
+            text-decoration: none;
+        }
+        .navbar-nav .nav-item .btn {
+            margin-right: 15px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .card-title {
+            margin-bottom: 1.5rem;
+        }
+        .list-group-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .list-group-item .dropdown-menu {
+            display: none;
+        }
+        .list-group-item:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #343a40;
+            text-decoration: none;
+        }
+        .dropdown-item:hover {
+            background-color: #e9ecef;
+            text-decoration: none;
+        }
+        .dropdown-item .icon {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="/products">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-apple" viewBox="0 0 16 16">
+                <path d="M8.205 4.157c-.299-.351-.518-.845-.425-1.352.443.055.963.31 1.297.667.344.368.578.845.513 1.34-.495.056-1.03-.26-1.385-.655zM7.2 1.803C6.592 1.526 5.75 1.404 5.063 1.64c-.558.186-1.056.61-1.37 1.194-.345.633-.517 1.391-.373 2.144-.682.01-1.283.412-1.667 1.004-.34.527-.497 1.153-.418 1.774.03.245.11.494.229.731.181.342.378.677.602 1.007.334.496.738 1.028 1.268 1.31.533.287 1.16.235 1.767.123.404-.073.793-.274 1.164-.5.37-.226.722-.488 1.064-.75.305-.238.645-.554 1.07-.504.422.053.874.252 1.245.556.396.322.77.691 1.092 1.064.254.297.465.63.654.962.087.153.17.306.259.458.224.384.446.772.747 1.116.285.327.677.568 1.112.611.79.078 1.555-.226 2.06-.789.415-.454.711-1.056.8-1.68.097-.707-.044-1.421-.418-2.035-.383-.631-.946-1.14-1.497-1.594-.594-.482-1.225-.83-1.993-1.036-.503-.128-1.007-.202-1.513-.204-.528-.001-1.055.042-1.578.12-.68.099-1.344.329-1.989.65-.512.252-.994.586-1.417 1.016-.094.095-.181.195-.273.292-.097.102-.188.208-.279.316z"/>
+            </svg>
+            AppleStore
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                <li class="nav-item d-flex align-items-center" sec:authorize="isAuthenticated()">
+                    <span class="navbar-text text-white">
+                        Xin chào, <span sec:authentication="name" style="margin-right: 20px;"></span>
+                    </span>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-outline-light" type="submit">Logout</button>
+                    </form>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="btn btn-outline-light" href="/login">Đăng Nhập</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h1>Bảng Điều Khiển: ADMIN </h1>
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title"></h2>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-box-open text-primary"></i> Sản Phẩm</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/products"><i class="fas fa-eye icon"></i> Xem</a>
+                        <a class="dropdown-item" href="/products/add"><i class="fas fa-plus icon"></i> Thêm</a>
+                    </div>
+                </li>
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-tags text-success"></i> Loại Máy</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/categories"><i class="fas fa-eye icon"></i> Xem</a>
+                        <a class="dropdown-item" href="/categories/add"><i class="fas fa-plus icon"></i> Thêm</a>
+                    </div>
+                </li>
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-calendar-alt text-warning"></i> Năm Sản Xuất</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/years"><i class="fas fa-eye icon"></i> Xem</a>
+                        <a class="dropdown-item" href="/years/add"><i class="fas fa-plus icon"></i> Thêm</a>
+                    </div>
+                </li>
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-percent text-danger"></i> Voucher</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/voucher"><i class="fas fa-eye icon"></i> Xem</a>
+                        <a class="dropdown-item" href="/voucher/add"><i class="fas fa-plus icon"></i> Thêm</a>
+                    </div>
+                </li>
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-receipt"></i> Đơn Hàng</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/order/list"><i class="fas fa-eye icon"></i> Xem</a>
+                    </div>
+                </li>
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-dollar-sign"></i> Doanh Thu</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/revenues/daily"><i class="fas fa-eye icon"></i> Doanh thu ngày</a>
+                        <a class="dropdown-item" href="/revenues/monthly"><i class="fas fa-eye icon"></i> Doanh thu tháng</a>
+                    </div>
+                </li>
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-users text-info"></i> Người Dùng</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/admin/users"><i class="fas fa-eye icon"></i> Xem</a>
+                    </div>
+                </li>
+                <li class="list-group-item position-relative">
+                    <a href="#"><i class="fas fa-handshake text-success"></i> Vai Trò</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/admin/roles/list"><i class="fas fa-eye icon"></i> Xem</a>
+                        <a class="dropdown-item" href="/admin/roles/add"><i class="fas fa-plus icon"></i> Thêm</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

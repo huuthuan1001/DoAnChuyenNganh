@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Doanh thu các ngày trong tháng</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+
+            var chartLabels = /*[[${revenues.![#temporals.format(date, 'dd/MM/yyyy')]}]]*/ [];
+            var chartData = /*[[${revenues.![totalRevenue]}]]*/ [];
+
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Doanh thu',
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        data: chartData,
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+        /*]]>*/
+    </script>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+    <h1 align="center">Doanh thu các ngày trong tháng</h1>
+
+    <div th:if="${revenues != null and not #lists.isEmpty(revenues)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Ngày</th>
+                <th>Tổng doanh thu ($)</th>
+                <th>Số lượng đơn hàng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="revenue : ${revenues}">
+                <td th:text="${#temporals.format(revenue.date, 'dd/MM/yyyy')}"></td>
+                <td th:text="${revenue.totalRevenue}"></td>
+                <td th:text="${revenue.numberOfSales}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${revenues == null or #lists.isEmpty(revenues)}">
+        <p>Không có dữ liệu doanh thu cho tháng này.</p>
+    </div>
+    <div class="container">
+        <canvas id="myChart"></canvas>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

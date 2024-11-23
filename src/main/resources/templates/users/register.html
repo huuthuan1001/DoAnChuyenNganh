@@ -1,0 +1,107 @@
+    <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+<section layout:fragment="content" class="container">
+    <div class="register-container">
+        <h1 class="register-title">Register</h1>
+        <form th:action="@{/register}" method="post">
+            <div th:if="${errorMessage}" class="alert alert-danger justify-content-center" role="alert">
+                <p th:text="${errorMessage}" class="text-danger text-start"></p>
+            </div>
+            <div th:if="${errors}" class="alert alert-danger justify-content-center" role="alert">
+                <ul>
+                    <li th:each="error : ${errors}" th:text="${error}" class="text-danger text-start"></li>
+                </ul>
+            </div>
+            <div class="form-group mb-3">
+                <label for="username" class="form-label"><i class="fas fa-user"></i> Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username">
+            </div>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label"><i class="fas fa-lock"></i> Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+            </div>
+            <div class="form-group mb-3">
+                <label for="confirmpassword" class="form-label"><i class="fas fa-lock"></i>Confirm Password</label>
+                <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" placeholder="Enter your confirm password" oninput="validatePassword()">
+            </div>
+            <div class="form-group mb-3">
+                <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group mb-3">
+                <label for="phone" class="form-label"><i class="fas fa-phone"></i> Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone">
+            </div>
+            <div class="d-grid form-action">
+                <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fas fa-user-plus"></i> Sign up</button>
+            </div>
+            <p class="text-center mt-3">Already have an account? <a class="text-info" th:href="@{/login}">Log in</a></p>
+        </form>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .register-container {
+        max-width: 400px;
+        margin: auto;
+        margin-top: 10%;
+        padding: 2rem;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .register-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #007bff;
+    }
+    .form-action {
+        margin-top: 1.5rem;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #007bff;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .text-info {
+        color: #007bff !important;
+    }
+</style>
+    <script>
+
+        function validatePassword() {
+          var password = document.getElementById("password");
+          var confirm_password = document.getElementById("confirmpassword");
+
+          if (password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("Passwords do not match");
+          } else {
+            confirm_password.setCustomValidity("");
+          }
+        }
+        document.getElementById("confirmpassword").addEventListener("input", validatePassword);
+
+    </script>

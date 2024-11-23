@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Doanh thu hàng ngày</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var revenueData = {
+                date: /*[[${#temporals.format(revenue.date, 'dd/MM/yyyy')}]]*/,
+                totalRevenue: /*[[${revenue.totalRevenue}]]*/,
+                numberOfSales: /*[[${revenue.numberOfSales}]]*/
+            };
+
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [revenueData.date],
+                    datasets: [{
+                        label: 'Doanh thu',
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        data: [revenueData.totalRevenue],
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+        /*]]>*/
+    </script>
+
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+    <h1 align="center">Doanh thu trong ngày</h1>
+    <div th:if="${revenue != null}">
+        <p><strong>Ngày:</strong> <span th:text="${#temporals.format(revenue.date, 'dd/MM/yyyy')}"></span></p>
+        <p><strong>Tổng doanh thu:</strong> <span th:text="${revenue.totalRevenue}"></span> $</p>
+        <p><strong>Số lượng đơn hàng:</strong> <span th:text="${revenue.numberOfSales}"></span></p>
+    </div>
+    <div th:if="${revenue == null}">
+        <p>Không có dữ liệu doanh thu cho hôm nay.</p>
+    </div>
+    <div class="container">
+        <canvas id="myChart"></canvas>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

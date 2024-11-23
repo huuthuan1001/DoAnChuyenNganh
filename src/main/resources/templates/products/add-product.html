@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Thêm Sản Phẩm</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha512-Mr3DqJtcDmVpQ7qI9uhqN1wWJ5zz3jZOljwXf2lJpZfZ2RvRtCElyd/UPfQDeAG0+hg61yE8xVghvIB7pFzZBQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    .form-label {
+        font-weight: bold;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    .btn-secondary:hover {
+        background-color: #565e64;
+        border-color: #454e54;
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+  <h1><i class="fas fa-box-open me-2"></i>Thêm Sản Phẩm Mới</h1>
+  <form th:action="@{/products/add}" th:object="${product}" method="post"
+        class="needs-validation" novalidate enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="name" class="form-label"><i class="fas fa-tag me-2"></i>Tên:</label>
+      <input type="text" th:field="*{name}" class="form-control" id="name"
+             required>
+      <div class="text-danger" th:if="${#fields.hasErrors('name')}"
+           th:errors="*{name}"></div>
+    </div>
+    <div class="mb-3">
+      <label for="price" class="form-label"><i class="fas fa-dollar-sign me-2"></i>Giá:</label>
+      <input type="text" th:field="*{price}" class="form-control" id="price" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('price')}"
+           th:errors="*{price}"></div>
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label"><i class="fas fa-list-alt me-2"></i>Danh Mục:</label>
+      <select th:field="*{category}" class="form-control" id="category">
+        <option th:each="category : ${categories}"
+                th:value="${category.id}" th:text="${category.name}"></option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="yearManufacture" class="form-label"><i class="fas fa-calendar-alt me-2"></i>Năm:</label>
+      <select th:field="*{yearManufacture}" class="form-control" id="yearManufacture">
+        <option th:each="year : ${years}"
+                th:value="${year.id}" th:text="${year.year}"></option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label"><i class="fas fa-info-circle me-2"></i>Mô Tả:</label>
+      <textarea th:field="*{description}" class="form-control"
+                id="description" required></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="imageUrl" class="form-label"><i class="fas fa-image me-2"></i>Hình Ảnh:</label>
+      <input type="file" id="imageUrl" name="imageUrl" class="form-control"/>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Thêm Sản Phẩm</button>
+    <a th:href="@{/products}" class="btn btn-secondary"><i class="fas fa-times-circle me-2"></i>Hủy</a>
+  </form>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Your Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Your Orders</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Địa Chỉ</th>
+            <th>Số Điện Thoại</th>
+            <th>Ghi Chú</th>
+            <th>Phương Thức Thanh Toán</th>
+            <th>Tổng Tiền</th>
+            <th>Trạng Thái Đơn Hàng</th>
+            <th>Sản Phẩm</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.address}"></td>
+            <td th:text="${order.phoneNumber}"></td>
+            <td th:text="${order.note}"></td>
+            <td th:text="${order.payment}"></td>
+            <td th:text="${order.totalPrice} + ' $'"></td>
+            <td th:text="${order.status}"></td> <!-- Display order status -->
+            <td>
+                <ul>
+                    <li th:each="detail : ${order.orderDetails}" th:text="${detail.product.name} + ' x ' + ${detail.quantity}"></li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-end mb-3">
+        <a th:href="@{/products}" class="btn btn-primary">Trở về trang chủ</a> <!-- Nút Quay Về -->
+    </div>
+</div>
+</body>
+</html>

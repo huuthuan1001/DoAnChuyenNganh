@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${title} ?: 'Trang Chủ'">Danh Sách Sản Phẩm</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<section layout:fragment="content" class="container mt-5">
+    <h1 class="mb-4">Danh Sách Sản Phẩm</h1>
+    <form th:action="@{/products}" method="get">
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Tìm theo tên" name="name">
+            </div>
+            <div class="col">
+                <select class="form-control" name="category">
+                    <option value="Tất cả"><-- Thể Loại --></option>
+                    <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+                </select>
+            </div>
+            <div class="col">
+                <select class="form-control" name="priceRange">
+                    <option value=""><-- Chọn khoảng giá --></option>
+                    <option value="0-100">0 - 100$</option>
+                    <option value="100-200">100 - 200$</option>
+                    <option value="200-500">200 - 500$</option>
+                    <option value="500-1000">500 - 1000$</option>
+                    <option value="1000+">1000$+</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </div>
+        </div>
+    </form>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="product : ${products}">
+            <div class="card h-100">
+                <img th:src="${product.imUrl}" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}"></h5>
+                    <p class="card-text" th:text="${product.description}"></p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Giá: <span th:text="${product.price} + '$'"></span></li>
+                        <li class="list-group-item">Loại: <span th:text="${product.category.name}"></span></li>
+                        <li class="list-group-item">Năm Sản Xuất: <span th:text="${product.yearManufacture != null ? product.yearManufacture.year : ''}"></span></li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <div sec:authorize="hasAuthority('ADMIN')">
+                            <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-success btn-sm">Sửa</a>
+                            <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc không?')">Xóa</a>
+                        </div>
+                        <form th:action="@{/cart/add}" method="post" sec:authorize="isAuthenticated()" class="d-flex">
+                            <input type="number" name="quantity" min="1" value="1" class="form-control me-2" style="width: 70px;">
+                            <input type="hidden" th:value="${product.id}" name="productId"/>
+                            <button type="submit" class="btn btn-warning btn-sm">Thêm Vào Giỏ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function() {
+        $(".card-img-top").each(function() {
+            if ($(this).attr("src") === "") {
+                $(this).attr("src", "/images/default-image.png");
+            }
+        });
+    });
+</script>
+</body>
+</html>
